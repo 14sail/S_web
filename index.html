@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>攝影集 | Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. 現代藝廊風格 (Warm & Edgy) - 全襯線體版 --- */
+        :root {
+            /* 暖米灰背景 */
+            --bg-color: #f4f1ea;       
+            /* 極致黑文字 */
+            --text-main: #111111;      
+            /* 次要文字 */
+            --text-sub: #555555;       
+            /* 強調色 */
+            --accent: #111111;         
+            /* 分隔線 */
+            --line-color: #dcd9d0;     
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            /* 這裡修改了字體設定：
+               英文優先使用 'Playfair Display'
+               中文自動使用 'Noto Serif TC' (思源宋體)
+               這兩者搭配起來非常有古典氣質
+            */
+            font-family: 'Playfair Display', 'Noto Serif TC', serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8; /* 襯線體通常需要多一點行高，閱讀起來才舒服 */
+        }
+
+        /* 頂部導覽列 */
+        header {
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            /* 標題維持原本設定，但因為 body 已經設定了字體，這裡可以簡化 */
+            font-size: 3.5rem; 
+            margin: 0 0 20px 0;
+            font-weight: 600; /*稍微加粗一點點*/
+            letter-spacing: -1px; 
+            color: var(--text-main);
+            /* font-style: italic; */
+            /* 標題加上斜體，會非常有藝術感，你可以看看喜不喜歡 */
+        }
+
+        /* 分類導覽按鈕 */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 5px 0;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem; /* 字體稍微加大 */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            
+            /* 按鈕也繼承同樣的優雅字體 */
+            font-family: 'Playfair Display', 'Noto Serif TC', serif; 
+        }
+
+        .category-btn::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            color: var(--text-main);
+            /*font-style: italic;*/ /* 選中時變斜體，增加細節質感 */
+        }
+        
+        .category-btn:hover::after, .category-btn.active::after {
+            width: 100%;
+        }
+
+        /* 內容區塊 */
+        .main-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        /* 分類標題 */
+        .category-section {
+            margin-bottom: 80px;
+            display: none;
+        }
+        .category-section.active {
+            display: block;
+        }
+
+        .category-title {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            text-align: left;
+            padding-left: 15px;
+            border-left: 3px solid var(--text-main); /* 線條稍微細一點配合字體 */
+            /*font-style: italic;*/ /* 分類標題也用斜體 */
+        }
+
+        /* 子標題 (Album) */
+        .album-group {
+            margin-bottom: 60px;
+        }
+        
+        .album-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400; /* 不要太粗，保持優雅 */
+            color: var(--text-main); /* 顏色加深 */
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--line-color); /* 改成底線樣式，比較像文件 */
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        /* 照片網格 */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .photo-card {
+            background-color: transparent;
+            padding: 0;
+            transition: transform 0.5s ease; /* 動作調慢一點，比較優雅 */
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: sepia(20%) contrast(90%); /* 換成微復古色調，配合米色背景 */
+            transition: filter 0.5s;
+        }
+        
+        .photo-card:hover img {
+            filter: sepia(0%) contrast(100%);
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            padding: 60px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            border-top: 1px solid var(--line-color);
+            background-color: var(--bg-color);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .photo-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .main-container {
+                padding: 0 20px;
+            }
+            h1 {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Photography</h1>
+        <div class="category-nav" id="nav-container">
+            <button class="category-btn active" onclick="filterCategory('All')">All</button>
+        </div>
+    </header>
+
+    <div class="main-container" id="content-container">
+        <p style="text-align:center; color: #555;">Loading photos...</p>
+    </div>
+
+    <footer>
+        &copy; 2025 Photography Collection.
+    </footer>
+
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <script>
+        // --- 3. 處理資料的邏輯 ---
+
+        // 模擬從後台讀取的資料 (實際運作時，我們會修改這段去讀取 _data/albums 裡的 JSON)
+        // 目前先用這個變數測試介面，等你後台架好我們再換成真實讀取程式碼
+        const albums = []; 
+
+        // 真正開發時，我們會用這段 fetch 來抓取 Decap CMS 產生的 JSON
+        /*
+        async function fetchAlbums() {
+            // 這裡需要一點額外的腳本將 _data/albums 轉為單一 JSON，
+            // 為了簡化教學，這部分我們在下一步「部署」時處理。
+        }
+        */
+
+        // 為了現在能看到畫面，我們寫一個「渲染函數」
+        // 當你設定好 Netlify 後，我們會把這段邏輯接上真實資料庫
+        
+        function renderGallery(data) {
+            const container = document.getElementById('content-container');
+            const navContainer = document.getElementById('nav-container');
+            container.innerHTML = '';
+
+            // 1. 整理分類
+            const categories = new Set(['All']);
+            const groupedData = {};
+
+            data.forEach(album => {
+                categories.add(album.category);
+                
+                if (!groupedData[album.category]) {
+                    groupedData[album.category] = {};
+                }
+                // 依照小標題分組 (例如: 2025 S1)
+                if (!groupedData[album.category][album.title]) {
+                    groupedData[album.category][album.title] = [];
+                }
+                groupedData[album.category][album.title].push(...album.photos);
+            });
+
+            // 2. 建立導覽按鈕
+            categories.forEach(cat => {
+                if(cat === 'All') return; // All 已經有了
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.innerText = cat;
+                btn.onclick = () => filterCategory(cat);
+                navContainer.appendChild(btn);
+            });
+
+            // 3. 建立內容區塊 (HTML)
+            // 先建立 All 的區塊
+            let allHtml = '<div id="cat-All" class="category-section active">';
+            
+            // 這裡為了展示，我們先簡單把所有照片列出來，或是你可以設計成只顯示封面
+            // 為了符合你的分類需求，我們主要建立各分類的區塊
+            
+            for (const [catName, subGroups] of Object.entries(groupedData)) {
+                let catHtml = `<div id="cat-${catName}" class="category-section">`;
+                catHtml += `<h2 class="category-title">${catName}</h2>`;
+
+                for (const [subTitle, photos] of Object.entries(subGroups)) {
+                    catHtml += `<div class="album-group">`;
+                    catHtml += `<div class="album-subtitle">${subTitle}</div>`;
+                    catHtml += `<div class="photo-grid">`;
+                    
+                    photos.forEach(photo => {
+                        catHtml += `
+                            <div class="photo-card">
+                                <img src="${photo.image}" alt="${photo.caption || ''}">
+                            </div>
+                        `;
+                    });
+
+                    catHtml += `</div></div>`; // 結束 grid 和 album-group
+                }
+                catHtml += `</div>`; // 結束 category-section
+                container.innerHTML += catHtml;
+                
+                // 把這些內容也加到 "All" 裡嗎？通常分類明確時，All 可以只放精選，或是隱藏
+            }
+            
+            // 補充：如果沒有資料
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">目前沒有照片，請登入後台新增。</p>';
+            }
+        }
+
+        // 切換分類的函數
+        function filterCategory(category) {
+            // 更新按鈕狀態
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText === category) btn.classList.add('active');
+            });
+
+            // 顯示對應區塊
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            const target = document.getElementById(`cat-${category}`);
+            if (target) {
+                target.classList.add('active');
+            } else if (category === 'All') {
+                // 這裡可以決定 All 要顯示什麼，或者把所有 category-section 都設為 block
+                document.querySelectorAll('.category-section').forEach(sec => sec.classList.add('active'));
+            }
+        }
+        
+        // 登入後台跳轉邏輯
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
