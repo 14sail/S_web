@@ -1,14 +1,14 @@
 backend:
   name: git-gateway
-  branch: master
+  branch: master # 你的分支是 master，這裡一定要對
 
 media_folder: "images/uploads"
 public_folder: "images/uploads"
 
 collections:
-  - name: "albums" # 改用相簿的概念
+  - name: "albums"
     label: "攝影相簿"
-    folder: "_data/albums" # 每個相簿會存成一個獨立檔案，比較好管理
+    folder: "_data/albums"
     create: true
     slug: "{{year}}-{{slug}}"
     fields:
@@ -16,13 +16,11 @@ collections:
       - label: "大分類"
         name: "category"
         widget: "select"
-        options: ["Life", "Camping", "About", "Travel", "Portrait"] # 這裡定義你的大分類
+        options: ["Life", "Camping", "About", "Travel", "Portrait"]
         default: "Life"
       - { label: "封面照片", name: "cover_image", widget: "image" }
-      - label: "相片集"
-        name: "photos"
-        widget: "list"
-        fields:
-          - { label: "照片", name: "image", widget: "image" }
-          - { label: "說明", name: "caption", widget: "string", required: false }
-      - { label: "建立日期", name: "date", widget: "datetime" }
+      - label: "相片列表 (點擊 Add 快速選圖)", 
+        name: "photos", 
+        widget: "list", 
+        field: { label: "照片", name: "image", widget: "image" } 
+        # 這裡移除了說明欄位，只需選圖即可
