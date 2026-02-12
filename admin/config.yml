@@ -9,6 +9,8 @@ collections:
   - name: "albums"
     label: "攝影相簿"
     folder: "_data/albums"
+    extension: "json" # 強制副檔名為 .json
+    format: "json"    # 強制格式為 json
     create: true
     slug: "{{year}}-{{slug}}"
     fields:
