@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: master # 你的分支是 master，這裡一定要對
+  branch: master
 
 media_folder: "images/uploads"
 public_folder: "images/uploads"
@@ -19,10 +19,8 @@ collections:
         options: ["Life", "Camping", "About", "Travel", "Portrait"]
         default: "Life"
       - { label: "封面照片", name: "cover_image", widget: "image" }
-      - label: "相片列表 (點擊 Add 快速選圖)", 
-        name: "photos", 
-        widget: "list", 
-        fields:
-          - { label: "照片", name: "image", widget: "image" }
-          - { label: "說明", name: "caption", widget: "string", required: false }
-      - { label: "建立日期", name: "date", widget: "datetime" }
+      - label: "相片列表"
+        name: "photos"
+        widget: "list"
+        summary: "{{fields.image}}"
+        field: { label: "照片", name: "image", widget: "image" }
