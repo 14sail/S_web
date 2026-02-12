@@ -22,5 +22,7 @@ collections:
       - label: "相片列表 (點擊 Add 快速選圖)", 
         name: "photos", 
         widget: "list", 
-        field: { label: "照片", name: "image", widget: "image" } 
-        # 這裡移除了說明欄位，只需選圖即可
+        fields:
+          - { label: "照片", name: "image", widget: "image" }
+          - { label: "說明", name: "caption", widget: "string", required: false }
+      - { label: "建立日期", name: "date", widget: "datetime" }
