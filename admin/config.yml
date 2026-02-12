@@ -9,11 +9,10 @@ collections:
   - name: "albums"
     label: "攝影相簿"
     folder: "_data/albums"
-    extension: "json" # 強制存成 json
-    format: "json"    # 強制格式
+    extension: "md"       # 順從系統，使用它想要的副檔名
+    format: "json"        # 重點！內容必須是 JSON，這樣網頁才讀得懂
     create: true
     slug: "{{year}}-{{slug}}"
-    identifier_field: "title"
     fields:
       - { label: "小標題 (例如: 2025 S1)", name: "title", widget: "string" }
       - label: "大分類"

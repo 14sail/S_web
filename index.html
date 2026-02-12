@@ -230,15 +230,25 @@
                 
                 if (!response.ok) throw new Error("無法讀取資料夾清單");
                 
-                const files = await response.json();
-                const allAlbums = [];
+                const mdFiles = files.filter(f => f.name.endsWith('.md') && f.name !== '.gitkeep');
 
-                // 2. 遍歷所有 JSON 檔案並讀取內容
-                for (const file of files) {
-                    if (file.name.endsWith('.json')) {
-                        const res = await fetch(file.download_url);
-                        const data = await res.json();
-                        allAlbums.push(data);
+                if (mdFiles.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;">目前還沒有相簿，請去 /admin 新增項目。</p>';
+                    return;
+                }
+
+                // 2. 抓取內容
+                for (const file of mdFiles) {
+                    const res = await fetch(file.download_url);
+                    if (res.ok) {
+                        const text = await res.text();
+                        try {
+                            // 因為我們在 config 設了 format: json，所以內容會是 JSON 字串
+                            const data = JSON.parse(text);
+                            allAlbums.push(data);
+                        } catch (e) {
+                            console.error("解析失敗，這可能不是 JSON 格式的 .md:", file.name);
+                        }
                     }
                 }
 
