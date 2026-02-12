@@ -1,14 +1,14 @@
 backend:
   name: git-gateway
-  branch: main
+  branch: main # 確保這裡是 main
 
 media_folder: "images/uploads"
 public_folder: "images/uploads"
 
 collections:
-  - name: "albums" # 改用相簿的概念
+  - name: "albums"
     label: "攝影相簿"
-    folder: "_data/albums" # 每個相簿會存成一個獨立檔案，比較好管理
+    folder: "_data/albums"
     create: true
     slug: "{{year}}-{{slug}}"
     fields:
@@ -16,7 +16,7 @@ collections:
       - label: "大分類"
         name: "category"
         widget: "select"
-        options: ["Life", "Camping", "About", "Travel", "Portrait"] # 這裡定義你的大分類
+        options: ["Life", "Camping", "About", "Travel", "Portrait"]
         default: "Life"
       - { label: "封面照片", name: "cover_image", widget: "image" }
       - label: "相片集"
