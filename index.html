@@ -218,7 +218,41 @@
 
         // 模擬從後台讀取的資料 (實際運作時，我們會修改這段去讀取 _data/albums 裡的 JSON)
         // 目前先用這個變數測試介面，等你後台架好我們再換成真實讀取程式碼
-        const albums = []; 
+        async function loadGallery() {
+            const container = document.getElementById('content-container');
+            
+            try {
+                // 1. 取得所有相簿檔案列表 
+                // 在 Netlify 佈署後，我們可以直接抓取 _data/albums 資料夾
+                // 但因為靜態網頁無法直接掃描資料夾，最簡單的作法是讓朋友每傳一次，
+                // 你手動加進去，或是我們用 GitHub API 自動抓取。
+                
+                // 為了讓你現在能直接看到結果，我們先用一個「手動列表」測試
+                // 等你上傳後，請把檔名寫在這裡（例如：2025-2025-s1.json）
+                const albumFiles = [
+                    '2026-2025-s2.md' // 這裡要對應 GitHub _data/albums 裡的檔名
+                ];
+
+                const allAlbums = [];
+
+                for (const file of albumFiles) {
+                    const response = await fetch(`/_data/albums/${file}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        allAlbums.push(data);
+                    }
+                }
+
+                renderGallery(allAlbums);
+
+            } catch (error) {
+                console.error("讀取資料失敗:", error);
+                container.innerHTML = '<p style="text-align:center;">讀取照片時發生錯誤。</p>';
+            }
+        }
+
+        // 頁面載入後執行
+        window.onload = loadGallery;
 
         // 真正開發時，我們會用這段 fetch 來抓取 Decap CMS 產生的 JSON
         /*
