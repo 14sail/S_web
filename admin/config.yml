@@ -9,10 +9,11 @@ collections:
   - name: "albums"
     label: "攝影相簿"
     folder: "_data/albums"
-    extension: "json" # 強制副檔名為 .json
-    format: "json"    # 強制格式為 json
+    extension: "json" # 強制存成 json
+    format: "json"    # 強制格式
     create: true
     slug: "{{year}}-{{slug}}"
+    identifier_field: "title"
     fields:
       - { label: "小標題 (例如: 2025 S1)", name: "title", widget: "string" }
       - label: "大分類"
@@ -24,5 +25,4 @@ collections:
       - label: "相片列表"
         name: "photos"
         widget: "list"
-        summary: "{{fields.image}}"
         field: { label: "照片", name: "image", widget: "image" }
