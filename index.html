@@ -218,41 +218,132 @@
 
         // 模擬從後台讀取的資料 (實際運作時，我們會修改這段去讀取 _data/albums 裡的 JSON)
         // 目前先用這個變數測試介面，等你後台架好我們再換成真實讀取程式碼
+        const GITHUB_REPO = "14sail/S_web"; // 你的倉庫路徑
+
         async function loadGallery() {
             const container = document.getElementById('content-container');
             
             try {
-                // 1. 取得所有相簿檔案列表 
-                // 在 Netlify 佈署後，我們可以直接抓取 _data/albums 資料夾
-                // 但因為靜態網頁無法直接掃描資料夾，最簡單的作法是讓朋友每傳一次，
-                // 你手動加進去，或是我們用 GitHub API 自動抓取。
+                // 1. 透過 GitHub API 抓取 _data/albums 資料夾下的檔案清單
+                const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/_data/albums`;
+                const response = await fetch(apiUrl);
                 
-                // 為了讓你現在能直接看到結果，我們先用一個「手動列表」測試
-                // 等你上傳後，請把檔名寫在這裡（例如：2025-2025-s1.json）
-                const albumFiles = [
-                    '2026-2025-s2.md' // 這裡要對應 GitHub _data/albums 裡的檔名
-                ];
-
+                if (!response.ok) throw new Error("無法讀取資料夾清單");
+                
+                const files = await response.json();
                 const allAlbums = [];
 
-                for (const file of albumFiles) {
-                    const response = await fetch(`/_data/albums/${file}`);
-                    if (response.ok) {
-                        const data = await response.json();
+                // 2. 遍歷所有 JSON 檔案並讀取內容
+                for (const file of files) {
+                    if (file.name.endsWith('.json')) {
+                        const res = await fetch(file.download_url);
+                        const data = await res.json();
                         allAlbums.push(data);
                     }
                 }
 
+                // 3. 執行渲染
                 renderGallery(allAlbums);
 
             } catch (error) {
-                console.error("讀取資料失敗:", error);
-                container.innerHTML = '<p style="text-align:center;">讀取照片時發生錯誤。</p>';
+                console.error("錯誤詳情:", error);
+                container.innerHTML = `<p style="text-align:center;">目前沒有照片，或資料讀取中...<br>請確認後台已發布內容。</p>`;
             }
         }
 
-        // 頁面載入後執行
+        function renderGallery(data) {
+            const container = document.getElementById('content-container');
+            const navContainer = document.getElementById('nav-container');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align:center;">相簿是空的。</p>';
+                return;
+            }
+
+            const categories = new Set(['All']);
+            const groupedData = {};
+
+            data.forEach(album => {
+                categories.add(album.category);
+                if (!groupedData[album.category]) groupedData[album.category] = {};
+                if (!groupedData[album.category][album.title]) groupedData[album.category][album.title] = [];
+                
+                // 處理照片資料結構 (適配 list 模式)
+                const photoArray = Array.isArray(album.photos) ? album.photos : [];
+                groupedData[album.category][album.title].push(...photoArray);
+            });
+
+            // 動態產生導覽按鈕
+            navContainer.innerHTML = '<button class="category-btn active" onclick="filterCategory(\'All\')">All</button>';
+            categories.forEach(cat => {
+                if(cat === 'All') return;
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.innerText = cat;
+                btn.onclick = () => filterCategory(cat);
+                navContainer.appendChild(btn);
+            });
+
+            // 產生內容
+            for (const [catName, subGroups] of Object.entries(groupedData)) {
+                let catHtml = `<div id="cat-${catName}" class="category-section active">`;
+                catHtml += `<h2 class="category-title">${catName}</h2>`;
+
+                for (const [subTitle, photos] of Object.entries(subGroups)) {
+                    catHtml += `<div class="album-group">`;
+                    catHtml += `<div class="album-subtitle">${subTitle}</div>`;
+                    catHtml += `<div class="photo-grid">`;
+                    
+                    photos.forEach(photoPath => {
+                        // 這裡要相容「純字串」或「物件」格式
+                        const imgUrl = typeof photoPath === 'string' ? photoPath : photoPath.image;
+                        if(imgUrl) {
+                            catHtml += `
+                                <div class="photo-card">
+                                    <img src="${imgUrl}" alt="Photo" loading="lazy">
+                                </div>
+                            `;
+                        }
+                    });
+
+                    catHtml += `</div></div>`;
+                }
+                catHtml += `</div>`;
+                container.innerHTML += catHtml;
+            }
+        }
+
+        function filterCategory(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText === category) btn.classList.add('active');
+            });
+
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            if (category === 'All') {
+                document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
+            } else {
+                const target = document.getElementById(`cat-${category}`);
+                if (target) target.style.display = 'block';
+            }
+        }
+
+        // 啟動！
         window.onload = loadGallery;
+
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
 
         // 真正開發時，我們會用這段 fetch 來抓取 Decap CMS 產生的 JSON
         /*
