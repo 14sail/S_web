@@ -158,7 +158,9 @@
 <body>
 
     <header>
-        <h1 id="site-title-display">lyh___ty</h1>
+        <div class="site-branding">
+            <h1 class="site-title" id="site-title-display">lyh___ty</h1>
+        </div>       
         <div class="category-nav" id="nav-container"></div>
     </header>
 
@@ -267,20 +269,25 @@
                 html += `</div>`;
             });
             container.innerHTML = html;
+            const activeCat = CATEGORIES[0];
+            updateActiveUI(activeCat);
         }
 
-        // 綁定全域函數
-        window.filterCategory = function(cat) {
+        function updateActiveUI(cat) {
             document.querySelectorAll('.category-btn').forEach(b => {
                 b.classList.toggle('active', b.innerText === cat);
             });
             document.querySelectorAll('.category-section').forEach(s => {
                 s.style.display = (s.id === `cat-${cat}`) ? 'block' : 'none';
             });
-            // 考慮到體驗，點擊分類時不一定要強制捲動到最頂端，但可保留
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+
+        // 綁定全域函數
+        window.filterCategory = function(cat) {
+            updateActiveUI(cat);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         window.onload = init;
     </script>
 </body>
