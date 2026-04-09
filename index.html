@@ -3,477 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>攝影集 | Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
+    <title>S2026 PHOTOGRAPHY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. 現代藝廊風格 (Warm & Edgy) - 全襯線體版 --- */
         :root {
-            /* 暖米灰背景 */
-            --bg-color: #f4f1ea;       
-            /* 極致黑文字 */
-            --text-main: #111111;      
-            /* 次要文字 */
-            --text-sub: #555555;       
-            /* 強調色 */
-            --accent: #111111;         
-            /* 分隔線 */
-            --line-color: #dcd9d0;     
+            --bg-color: #f8f8f8;       /* 純淨淺灰底 */
+            --text-main: #1a1a1a;      /* 深沉黑 */
+            --text-sub: #888888;       /* 灰字 */
+            --accent: #000000;         /* 強調色 */
+            --line-color: #e0e0e0;     /* 線條顏色 */
+        }
+
+        /* 嚴格取消所有斜體，統一比例 */
+        * {
+            font-style: normal !important; 
+            box-sizing: border-box;
+            text-transform: none !important; /* 徹底移除自動大寫 */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            /* 這裡修改了字體設定：
-               英文優先使用 'Playfair Display'
-               中文自動使用 'Noto Serif TC' (思源宋體)
-               這兩者搭配起來非常有古典氣質
-            */
-            font-family: 'Playfair Display', 'Noto Serif TC', serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.8; /* 襯線體通常需要多一點行高，閱讀起來才舒服 */
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0; padding: 0;
+            letter-spacing: 0.2px;
         }
 
-        /* 頂部導覽列 */
         header {
-            padding: 60px 20px 20px;
+            padding: 140px 20px 60px;
             text-align: center;
         }
-        
+
         h1 {
-            /* 標題維持原本設定，但因為 body 已經設定了字體，這裡可以簡化 */
-            font-size: 3.5rem; 
-            margin: 0 0 20px 0;
-            font-weight: 600; /*稍微加粗一點點*/
-            letter-spacing: -1px; 
-            color: var(--text-main);
-            /* font-style: italic; */
-            /* 標題加上斜體，會非常有藝術感，你可以看看喜不喜歡 */
+            font-family: 'Bodoni Moda', serif;
+            font-size: 4.5rem; /* 放大主標題，展現修長美感 */
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+            line-height: 1;
         }
 
-        /* 分類導覽按鈕 */
+        /* 導覽列：使用修長的 Antonio 字體 */
         .category-nav {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            gap: 50px;
+            margin-top: 60px;
         }
 
         .category-btn {
+            font-family: 'Antonio', sans-serif;
             background: none;
             border: none;
             color: var(--text-sub);
             padding: 5px 0;
             cursor: pointer;
+            font-size: 1.2rem; /* 修長字體可以稍微大一點 */
+            font-weight: 300;
+            letter-spacing: 2px;
             transition: 0.3s;
-            font-size: 1rem; /* 字體稍微加大 */
-            letter-spacing: 1px;
-            text-transform: uppercase;
             position: relative;
-            
-            /* 按鈕也繼承同樣的優雅字體 */
-            font-family: 'Playfair Display', 'Noto Serif TC', serif; 
         }
 
-        .category-btn::after {
+        .category-btn:hover { color: var(--text-main); }
+
+        .category-btn.active {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .category-btn.active::after {
             content: '';
             position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--accent);
-            transition: width 0.3s;
-        }
-
-        .category-btn:hover, .category-btn.active {
-            color: var(--text-main);
-            /*font-style: italic;*/ /* 選中時變斜體，增加細節質感 */
-        }
-        
-        .category-btn:hover::after, .category-btn.active::after {
             width: 100%;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background: var(--text-main);
         }
 
-        /* 內容區塊 */
         .main-container {
-            max-width: 1400px;
-            margin: 40px auto;
-            padding: 0 40px;
+            max-width: 1600px;
+            margin: 0 auto 100px;
+            padding: 0 60px;
         }
 
-        /* 分類標題 */
         .category-section {
-            margin-bottom: 80px;
             display: none;
+            animation: fadeIn 1s ease forwards;
         }
-        .category-section.active {
-            display: block;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .category-title {
+            font-family: 'Bodoni Moda', serif;
             font-size: 2.5rem;
-            color: var(--text-main);
-            margin-bottom: 40px;
-            text-align: left;
-            padding-left: 15px;
-            border-left: 3px solid var(--text-main); /* 線條稍微細一點配合字體 */
-            /*font-style: italic;*/ /* 分類標題也用斜體 */
+            margin-bottom: 80px;
+            text-align: center;
+            color: var(--text-sub);
+            font-weight: 400;
         }
 
-        /* 子標題 (Album) */
-        .album-group {
-            margin-bottom: 60px;
-        }
-        
+        .album-group { margin-bottom: 120px; }
+
         .album-subtitle {
-            font-size: 1.1rem;
-            font-weight: 400; /* 不要太粗，保持優雅 */
-            color: var(--text-main); /* 顏色加深 */
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 1px solid var(--line-color); /* 改成底線樣式，比較像文件 */
-            display: inline-block;
-            padding-bottom: 5px;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--line-color);
+            padding-bottom: 15px;
         }
 
-        /* 照片網格 */
         .photo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .photo-card {
-            background-color: transparent;
-            padding: 0;
-            transition: transform 0.5s ease; /* 動作調慢一點，比較優雅 */
-        }
-
-        .photo-card:hover {
-            transform: translateY(-5px);
+            grid-template-columns: repeat(2, 1fr); /* 雙欄排版最有雜誌感 */
+            gap: 30px;
         }
 
         .photo-card img {
             width: 100%;
             height: auto;
             display: block;
-            filter: sepia(20%) contrast(90%); /* 換成微復古色調，配合米色背景 */
-            transition: filter 0.5s;
-        }
-        
-        .photo-card:hover img {
-            filter: sepia(0%) contrast(100%);
+            transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
-        /* 頁尾 */
+        .photo-card:hover img {
+            opacity: 0.9;
+            transform: scale(1.01);
+        }
+
         footer {
             text-align: center;
-            padding: 60px;
-            font-size: 0.9rem;
+            padding: 100px 20px;
+            font-family: 'Antonio', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 5px;
             color: var(--text-sub);
             border-top: 1px solid var(--line-color);
-            background-color: var(--bg-color);
-            font-style: italic;
         }
 
-        @media (max-width: 768px) {
-            .photo-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .main-container {
-                padding: 0 20px;
-            }
-            h1 {
-                font-size: 2.8rem;
-            }
+        @media (max-width: 1024px) {
+            .photo-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 3rem; }
+            .main-container { padding: 0 20px; }
+            .category-nav { gap: 30px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>My Photography</h1>
-        <div class="category-nav" id="nav-container">
-            <button class="category-btn active" onclick="filterCategory('All')">All</button>
-        </div>
+        <h1 id="site-title-display">lyh___ty</h1>
+        <div class="category-nav" id="nav-container"></div>
     </header>
 
     <div class="main-container" id="content-container">
-        <p style="text-align:center; color: #555;">Loading photos...</p>
+        <p style="text-align:center; color: #888; font-family: 'Antonio'; letter-spacing: 2px;">LOADING...</p>
     </div>
 
-    <footer>
-        &copy; 2025 Photography Collection.
-    </footer>
+    <footer>Designed for S2026. Editorial Archive.</footer>
 
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
-    <!-- <script>
-        // --- 3. 處理資料的邏輯 ---
-
-        // 模擬從後台讀取的資料 (實際運作時，我們會修改這段去讀取 _data/albums 裡的 JSON)
-        // 目前先用這個變數測試介面，等你後台架好我們再換成真實讀取程式碼
-        const GITHUB_REPO = "14sail/S_web"; // 你的倉庫路徑
-
-        async function loadGallery() {
-            const container = document.getElementById('content-container');
-            
-            try {
-                // 1. 透過 GitHub API 抓取 _data/albums 資料夾下的檔案清單
-                const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/_data/albums`;
-                const response = await fetch(apiUrl);
-                
-                if (!response.ok) throw new Error("無法讀取資料夾清單");
-                
-                const mdFiles = files.filter(f => f.name.endsWith('.md') && f.name !== '.gitkeep');
-
-                if (mdFiles.length === 0) {
-                    container.innerHTML = '<p style="text-align:center;">目前還沒有相簿，請去 /admin 新增項目。</p>';
-                    return;
-                }
-
-                // 2. 抓取內容
-                for (const file of mdFiles) {
-                    const res = await fetch(file.download_url);
-                    if (res.ok) {
-                        const text = await res.text();
-                        try {
-                            // 因為我們在 config 設了 format: json，所以內容會是 JSON 字串
-                            const data = JSON.parse(text);
-                            allAlbums.push(data);
-                        } catch (e) {
-                            console.error("解析失敗，這可能不是 JSON 格式的 .md:", file.name);
-                        }
-                    }
-                }
-
-                // 3. 執行渲染
-                renderGallery(allAlbums);
-
-            } catch (error) {
-                console.error("錯誤詳情:", error);
-                container.innerHTML = `<p style="text-align:center;">目前沒有照片，或資料讀取中...<br>請確認後台已發布內容。</p>`;
-            }
-        }
-
-        function renderGallery(data) {
-            const container = document.getElementById('content-container');
-            const navContainer = document.getElementById('nav-container');
-            container.innerHTML = '';
-
-            if (data.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">相簿是空的。</p>';
-                return;
-            }
-
-            const categories = new Set(['All']);
-            const groupedData = {};
-
-            data.forEach(album => {
-                categories.add(album.category);
-                if (!groupedData[album.category]) groupedData[album.category] = {};
-                if (!groupedData[album.category][album.title]) groupedData[album.category][album.title] = [];
-                
-                // 處理照片資料結構 (適配 list 模式)
-                const photoArray = Array.isArray(album.photos) ? album.photos : [];
-                groupedData[album.category][album.title].push(...photoArray);
-            });
-
-            // 動態產生導覽按鈕
-            navContainer.innerHTML = '<button class="category-btn active" onclick="filterCategory(\'All\')">All</button>';
-            categories.forEach(cat => {
-                if(cat === 'All') return;
-                const btn = document.createElement('button');
-                btn.className = 'category-btn';
-                btn.innerText = cat;
-                btn.onclick = () => filterCategory(cat);
-                navContainer.appendChild(btn);
-            });
-
-            // 產生內容
-            for (const [catName, subGroups] of Object.entries(groupedData)) {
-                let catHtml = `<div id="cat-${catName}" class="category-section active">`;
-                catHtml += `<h2 class="category-title">${catName}</h2>`;
-
-                for (const [subTitle, photos] of Object.entries(subGroups)) {
-                    catHtml += `<div class="album-group">`;
-                    catHtml += `<div class="album-subtitle">${subTitle}</div>`;
-                    catHtml += `<div class="photo-grid">`;
-                    
-                    photos.forEach(photoPath => {
-                        // 這裡要相容「純字串」或「物件」格式
-                        const imgUrl = typeof photoPath === 'string' ? photoPath : photoPath.image;
-                        if(imgUrl) {
-                            catHtml += `
-                                <div class="photo-card">
-                                    <img src="${imgUrl}" alt="Photo" loading="lazy">
-                                </div>
-                            `;
-                        }
-                    });
-
-                    catHtml += `</div></div>`;
-                }
-                catHtml += `</div>`;
-                container.innerHTML += catHtml;
-            }
-        }
-
-        function filterCategory(category) {
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.innerText === category) btn.classList.add('active');
-            });
-
-            document.querySelectorAll('.category-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            if (category === 'All') {
-                document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
-            } else {
-                const target = document.getElementById(`cat-${category}`);
-                if (target) target.style.display = 'block';
-            }
-        }
-
-        // 啟動！
-        window.onload = loadGallery;
-
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
-        }
-
-        // 真正開發時，我們會用這段 fetch 來抓取 Decap CMS 產生的 JSON
-        /*
-        async function fetchAlbums() {
-            // 這裡需要一點額外的腳本將 _data/albums 轉為單一 JSON，
-            // 為了簡化教學，這部分我們在下一步「部署」時處理。
-        }
-        */
-
-        // 為了現在能看到畫面，我們寫一個「渲染函數」
-        // 當你設定好 Netlify 後，我們會把這段邏輯接上真實資料庫
-        
-        function renderGallery(data) {
-            const container = document.getElementById('content-container');
-            const navContainer = document.getElementById('nav-container');
-            container.innerHTML = '';
-
-            // 1. 整理分類
-            const categories = new Set(['All']);
-            const groupedData = {};
-
-            data.forEach(album => {
-                categories.add(album.category);
-                
-                if (!groupedData[album.category]) {
-                    groupedData[album.category] = {};
-                }
-                // 依照小標題分組 (例如: 2025 S1)
-                if (!groupedData[album.category][album.title]) {
-                    groupedData[album.category][album.title] = [];
-                }
-                groupedData[album.category][album.title].push(...album.photos);
-            });
-
-            // 2. 建立導覽按鈕
-            categories.forEach(cat => {
-                if(cat === 'All') return; // All 已經有了
-                const btn = document.createElement('button');
-                btn.className = 'category-btn';
-                btn.innerText = cat;
-                btn.onclick = () => filterCategory(cat);
-                navContainer.appendChild(btn);
-            });
-
-            // 3. 建立內容區塊 (HTML)
-            // 先建立 All 的區塊
-            let allHtml = '<div id="cat-All" class="category-section active">';
-            
-            // 這裡為了展示，我們先簡單把所有照片列出來，或是你可以設計成只顯示封面
-            // 為了符合你的分類需求，我們主要建立各分類的區塊
-            
-            for (const [catName, subGroups] of Object.entries(groupedData)) {
-                let catHtml = `<div id="cat-${catName}" class="category-section">`;
-                catHtml += `<h2 class="category-title">${catName}</h2>`;
-
-                for (const [subTitle, photos] of Object.entries(subGroups)) {
-                    catHtml += `<div class="album-group">`;
-                    catHtml += `<div class="album-subtitle">${subTitle}</div>`;
-                    catHtml += `<div class="photo-grid">`;
-                    
-                    photos.forEach(photo => {
-                        catHtml += `
-                            <div class="photo-card">
-                                <img src="${photo.image}" alt="${photo.caption || ''}">
-                            </div>
-                        `;
-                    });
-
-                    catHtml += `</div></div>`; // 結束 grid 和 album-group
-                }
-                catHtml += `</div>`; // 結束 category-section
-                container.innerHTML += catHtml;
-                
-                // 把這些內容也加到 "All" 裡嗎？通常分類明確時，All 可以只放精選，或是隱藏
-            }
-            
-            // 補充：如果沒有資料
-            if (data.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">目前沒有照片，請登入後台新增。</p>';
-            }
-        }
-
-        // 切換分類的函數
-        function filterCategory(category) {
-            // 更新按鈕狀態
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.innerText === category) btn.classList.add('active');
-            });
-
-            // 顯示對應區塊
-            document.querySelectorAll('.category-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            const target = document.getElementById(`cat-${category}`);
-            if (target) {
-                target.classList.add('active');
-            } else if (category === 'All') {
-                // 這裡可以決定 All 要顯示什麼，或者把所有 category-section 都設為 block
-                document.querySelectorAll('.category-section').forEach(sec => sec.classList.add('active'));
-            }
-        }
-        
-        // 登入後台跳轉邏輯
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/admin/";
-                    });
-                }
-            });
-        }
-    </script> -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        // 2. 你的 Firebase 設定 (請確認與 admin.html 相同)
         const firebaseConfig = {
             apiKey: "AIzaSyAJ7F4RmMlx7M_TK9h_ivBokM4AkdBoQ6c",
             authDomain: "fir-web-gallery.firebaseapp.com",
@@ -483,132 +181,110 @@
             appId: "1:202553975102:web:40ca5a8d599292f69d0c6f"
         };
 
-        // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- 核心邏輯：讀取資料並渲染 ---
+        // 定義你的完美大寫分類
+        const CATEGORIES = ['Life', 'About', 'Camping'];
 
-        // 你定義的分類，我們手動設定好按鈕順序
-        const definedCategories = ['All', 'life', 'about', 'camping'];
-
-        async function loadGallery() {
-            const container = document.getElementById('content-container');
-            const navContainer = document.getElementById('nav-container');
-            
+        async function init() {
             try {
-                // 從 Firebase "photos" 集合中抓取資料，並依照上傳時間排序（新的在前）
-                const photosRef = collection(db, "photos");
-                const q = query(photosRef, orderBy("timestamp", "desc"));
+                // 1. 動態讀取你在後台設定的主標題
+                const settingsRef = doc(db, "settings", "main");
+                const settingsSnap = await getDoc(settingsRef);
+                if (settingsSnap.exists() && settingsSnap.data().title) {
+                    document.getElementById('site-title-display').innerText = settingsSnap.data().title;
+                }
+
+                // 2. 抓取照片資料 (新的在前)
+                const q = query(collection(db, "photos"), orderBy("timestamp", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                const allPhotos = [];
+                const photos = [];
                 querySnapshot.forEach((doc) => {
-                    // 把每一筆照片資料收集起來
-                    allPhotos.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
+                    photos.push(doc.data());
                 });
 
-                if (allPhotos.length === 0) {
-                    container.innerHTML = '<p style="text-align:center;">目前還沒有相簿，請去後台新增項目。</p>';
-                    return;
-                }
-
-                // 產生分類按鈕 (All, life, about, camping)
-                navContainer.innerHTML = ''; // 先清空原本的
-                definedCategories.forEach(cat => {
-                    const btn = document.createElement('button');
-                    btn.className = `category-btn ${cat === 'All' ? 'active' : ''}`;
-                    btn.innerText = cat;
-                    // 當按鈕被點擊時，執行過濾
-                    btn.onclick = () => filterCategory(cat);
-                    navContainer.appendChild(btn);
-                });
-
-                // 產生照片內容
-                renderGallery(allPhotos);
+                // 3. 渲染畫面並預設顯示 Life
+                render(photos);
+                window.filterCategory('Life');
 
             } catch (error) {
-                console.error("讀取 Firebase 資料時發生錯誤:", error);
-                container.innerHTML = `<p style="text-align:center; color: red;">資料讀取失敗，請確認網路連線或設定。</p>`;
+                console.error("Firebase 連線錯誤:", error);
+                document.getElementById('content-container').innerHTML = 
+                    `<p style="text-align:center; color:#ccc; padding: 100px 0;">CONNECTION ERROR</p>`;
             }
         }
 
-        // 渲染照片的函數
-        function renderGallery(photosData) {
+        function render(photos) {
             const container = document.getElementById('content-container');
-            container.innerHTML = ''; // 清空載入中訊息
+            const nav = document.getElementById('nav-container');
 
-            // 我們把資料依照分類整理好 (life, about, camping)
-            const groupedData = {
-                'life': [],
-                'about': [],
-                'camping': []
-            };
+            // 產生導覽列按鈕
+            nav.innerHTML = CATEGORIES.map(cat => 
+                `<button class="category-btn" onclick="filterCategory('${cat}')">${cat}</button>`
+            ).join('');
 
-            // 把照片分門別類放好
-            photosData.forEach(photo => {
-                const cat = photo.category;
-                if (groupedData[cat]) {
-                    groupedData[cat].push(photo);
+            // 將照片分組：先依「大分類」，再依「上傳月份 (YYYY.MM)」
+            const grouped = {};
+            photos.forEach(p => {
+                // 將資料庫的小寫類別對應回大寫 (life -> Life)
+                const catKey = CATEGORIES.find(c => c.toLowerCase() === p.category.toLowerCase());
+                
+                if (catKey) {
+                    if (!grouped[catKey]) grouped[catKey] = {};
+                    
+                    // 自動生成年月標題 (例如：2026.04) 作為小標題
+                    let subtitle = "ARCHIVE";
+                    if(p.timestamp) {
+                        const d = new Date(p.timestamp);
+                        subtitle = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    }
+
+                    if (!grouped[catKey][subtitle]) grouped[catKey][subtitle] = [];
+                    grouped[catKey][subtitle].push(p);
                 }
             });
 
-            // 根據分類產出 HTML
-            for (const catName of Object.keys(groupedData)) {
-                const photosInCat = groupedData[catName];
+            // 產生 HTML
+            let html = '';
+            CATEGORIES.forEach(cat => {
+                html += `<div id="cat-${cat}" class="category-section">
+                    <div class="category-title">${cat}</div>`;
                 
-                // 如果這個分類沒有照片，就跳過不顯示標題
-                if (photosInCat.length === 0) continue;
-
-                // 建立該分類的區塊
-                let catHtml = `<div id="cat-${catName}" class="category-section active">`;
-                catHtml += `<h2 class="category-title">${catName}</h2>`;
-                catHtml += `<div class="photo-grid">`;
-                
-                // 把該分類的照片一張張放進去
-                photosInCat.forEach(photo => {
-                    catHtml += `
-                        <div class="photo-card">
-                            <img src="${photo.url}" alt="Photography in ${catName}" loading="lazy">
-                        </div>
-                    `;
-                });
-
-                catHtml += `</div></div>`; // 結束 grid 和 section
-                container.innerHTML += catHtml;
-            }
+                if (grouped[cat]) {
+                    // 將同月份的照片包在同一個 album-group 裡
+                    Object.keys(grouped[cat]).forEach(subtitle => {
+                        html += `<div class="album-group">
+                            <div class="album-subtitle">${subtitle}</div>
+                            <div class="photo-grid">
+                                ${grouped[cat][subtitle].map(p => 
+                                    `<div class="photo-card"><img src="${p.url}" loading="lazy"></div>`
+                                ).join('')}
+                            </div>
+                        </div>`;
+                    });
+                } else {
+                    html += `<p style="text-align:center; color:#ccc; padding: 100px 0;">NO CONTENT YET</p>`;
+                }
+                html += `</div>`;
+            });
+            container.innerHTML = html;
         }
 
-        // 切換分類的函數 (這個是全域函數，因為按鈕是動態產生的，但被包在 module 裡，所以寫法要稍微改一下)
-        // 將 filterCategory 綁定到 window，這樣按鈕的 onclick 才抓得到
-        window.filterCategory = function(category) {
-            // 1. 更新按鈕的視覺狀態 (底線)
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.innerText === category) btn.classList.add('active');
+        // 切換分類的函數 (綁定到 window 讓 onclick 抓得到)
+        window.filterCategory = function(cat) {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.classList.toggle('active', b.innerText === cat);
             });
-
-            // 2. 控制區塊的顯示/隱藏
-            document.querySelectorAll('.category-section').forEach(section => {
-                section.style.display = 'none';
+            document.querySelectorAll('.category-section').forEach(s => {
+                s.style.display = (s.id === `cat-${cat}`) ? 'block' : 'none';
             });
-            
-            if (category === 'All') {
-                // 如果選 All，就把所有有內容的區塊都顯示出來
-                document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
-            } else {
-                // 否則只顯示對應的分類區塊
-                const target = document.getElementById(`cat-${category}`);
-                if (target) target.style.display = 'block';
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 網頁載入完成後，執行 loadGallery 抓資料
-        window.onload = loadGallery;
-
+        // 網頁載入後執行
+        window.onload = init;
     </script>
 </body>
 </html>
