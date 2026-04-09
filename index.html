@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S2026 PHOTOGRAPHY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&family=Vicus+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f8f8f8;       /* 純淨淺灰底 */
@@ -110,13 +111,16 @@
         .album-group { margin-bottom: 120px; }
 
         .album-subtitle {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 1.8rem;
-            font-weight: 400;
+            /* 優先使用微光字體，後備使用思源黑體 */
+            font-family: 'Vicus Sans TC', 'Noto Sans TC', sans-serif;
+            font-size: 1.6rem;         /* 稍微縮小一點點，讓精緻感提升 */
+            font-weight: 300;          /* 使用偏細的權重 */
+            letter-spacing: 0.15em;    /* 拉開字距，營造高級空氣感 */
             margin-bottom: 40px;
             color: var(--text-main);
             border-bottom: 1px solid var(--line-color);
             padding-bottom: 15px;
+            text-transform: none;      /* 確保不會被強制變大寫 */
         }
 
         .photo-grid {
