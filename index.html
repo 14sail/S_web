@@ -213,7 +213,7 @@
 
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-    <script>
+    <!-- <script>
         // --- 3. 處理資料的邏輯 ---
 
         // 模擬從後台讀取的資料 (實際運作時，我們會修改這段去讀取 _data/albums 裡的 JSON)
@@ -468,6 +468,147 @@
                 }
             });
         }
+    </script> -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // 2. 你的 Firebase 設定 (請確認與 admin.html 相同)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJ7F4RmMlx7M_TK9h_ivBokM4AkdBoQ6c",
+            authDomain: "fir-web-gallery.firebaseapp.com",
+            projectId: "fir-web-gallery",
+            storageBucket: "fir-web-gallery.firebasestorage.app",
+            messagingSenderId: "202553975102",
+            appId: "1:202553975102:web:40ca5a8d599292f69d0c6f"
+        };
+
+        // 初始化 Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- 核心邏輯：讀取資料並渲染 ---
+
+        // 你定義的分類，我們手動設定好按鈕順序
+        const definedCategories = ['All', 'life', 'about', 'camping'];
+
+        async function loadGallery() {
+            const container = document.getElementById('content-container');
+            const navContainer = document.getElementById('nav-container');
+            
+            try {
+                // 從 Firebase "photos" 集合中抓取資料，並依照上傳時間排序（新的在前）
+                const photosRef = collection(db, "photos");
+                const q = query(photosRef, orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                const allPhotos = [];
+                querySnapshot.forEach((doc) => {
+                    // 把每一筆照片資料收集起來
+                    allPhotos.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                if (allPhotos.length === 0) {
+                    container.innerHTML = '<p style="text-align:center;">目前還沒有相簿，請去後台新增項目。</p>';
+                    return;
+                }
+
+                // 產生分類按鈕 (All, life, about, camping)
+                navContainer.innerHTML = ''; // 先清空原本的
+                definedCategories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.className = `category-btn ${cat === 'All' ? 'active' : ''}`;
+                    btn.innerText = cat;
+                    // 當按鈕被點擊時，執行過濾
+                    btn.onclick = () => filterCategory(cat);
+                    navContainer.appendChild(btn);
+                });
+
+                // 產生照片內容
+                renderGallery(allPhotos);
+
+            } catch (error) {
+                console.error("讀取 Firebase 資料時發生錯誤:", error);
+                container.innerHTML = `<p style="text-align:center; color: red;">資料讀取失敗，請確認網路連線或設定。</p>`;
+            }
+        }
+
+        // 渲染照片的函數
+        function renderGallery(photosData) {
+            const container = document.getElementById('content-container');
+            container.innerHTML = ''; // 清空載入中訊息
+
+            // 我們把資料依照分類整理好 (life, about, camping)
+            const groupedData = {
+                'life': [],
+                'about': [],
+                'camping': []
+            };
+
+            // 把照片分門別類放好
+            photosData.forEach(photo => {
+                const cat = photo.category;
+                if (groupedData[cat]) {
+                    groupedData[cat].push(photo);
+                }
+            });
+
+            // 根據分類產出 HTML
+            for (const catName of Object.keys(groupedData)) {
+                const photosInCat = groupedData[catName];
+                
+                // 如果這個分類沒有照片，就跳過不顯示標題
+                if (photosInCat.length === 0) continue;
+
+                // 建立該分類的區塊
+                let catHtml = `<div id="cat-${catName}" class="category-section active">`;
+                catHtml += `<h2 class="category-title">${catName}</h2>`;
+                catHtml += `<div class="photo-grid">`;
+                
+                // 把該分類的照片一張張放進去
+                photosInCat.forEach(photo => {
+                    catHtml += `
+                        <div class="photo-card">
+                            <img src="${photo.url}" alt="Photography in ${catName}" loading="lazy">
+                        </div>
+                    `;
+                });
+
+                catHtml += `</div></div>`; // 結束 grid 和 section
+                container.innerHTML += catHtml;
+            }
+        }
+
+        // 切換分類的函數 (這個是全域函數，因為按鈕是動態產生的，但被包在 module 裡，所以寫法要稍微改一下)
+        // 將 filterCategory 綁定到 window，這樣按鈕的 onclick 才抓得到
+        window.filterCategory = function(category) {
+            // 1. 更新按鈕的視覺狀態 (底線)
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText === category) btn.classList.add('active');
+            });
+
+            // 2. 控制區塊的顯示/隱藏
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            if (category === 'All') {
+                // 如果選 All，就把所有有內容的區塊都顯示出來
+                document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
+            } else {
+                // 否則只顯示對應的分類區塊
+                const target = document.getElementById(`cat-${category}`);
+                if (target) target.style.display = 'block';
+            }
+        }
+
+        // 網頁載入完成後，執行 loadGallery 抓資料
+        window.onload = loadGallery;
+
     </script>
 </body>
 </html>
