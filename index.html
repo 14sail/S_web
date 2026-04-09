@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S2026 PHOTOGRAPHY</title>
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&display=swap" rel="stylesheet"> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Noto+Sans+TC:wght@300;500&family=Vicus+Sans+TC:wght@300;500&display=swap" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Vicus+Sans+TC:wght@300;500&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@300;700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Noto+Sans+TC:wght@100..900&family=Vicus+Sans+TC:wght@300;500&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;700&family=Antonio:wght@300;700&family=Vicus+Sans+TC:wght@300;500&display=swap" rel="stylesheet">  -->
     <style>
         :root {
             --bg-color: #f8f8f8;       /* 純淨淺灰底 */
@@ -112,20 +111,20 @@
         .album-group { margin-bottom: 120px; }
 
         .album-subtitle {
-            /* 1. 優先用 Bodoni (英數最美) 
-            2. 其次用 Antonio (另一種修長感備選) 
-            3. 遇到中文時，才用 Vicus Sans TC (微光) 
-            4. 最後用系統預設 */
-            font-family: 'Bodoni Moda', 'Antonio', 'Vicus Sans TC', sans-serif;
-            
-            font-size: 1.8rem;         /* 回復到你喜歡的大小 */
-            font-weight: 400;          /* 稍微增加一點份量感 */
-            letter-spacing: 0.1em;     /* 字距稍微收回一點點，讓英數更好讀 */
-            margin-bottom: 40px;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--line-color);
-            padding-bottom: 15px;
-        }
+                /* 優先權：Bodoni(英數) -> Vicus Sans TC(中文) -> 系統字體 */
+                font-family: 'Bodoni Moda', 'Vicus Sans TC', 'Noto Sans TC', sans-serif;
+                
+                font-size: 1.8rem;
+                font-weight: 300;          /* 稍微細一點會更灰、更輕盈 */
+                letter-spacing: 0.12em;    /* 拉開字距增加空氣感 */
+                margin-bottom: 40px;
+                
+                /* 🎨 顏色調整為灰色 */
+                color: #999999; 
+                
+                border-bottom: 1px solid #eeeeee; /* 底線也淡一點 */
+                padding-bottom: 15px;
+            }
 
         .photo-grid {
             display: grid;
